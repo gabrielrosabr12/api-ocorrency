@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -30,6 +31,9 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="password_hash", length = 255, nullable = false)
     private String hash_password;
 
+    public User() {
+    }
+
     @ManyToOne
     @JoinColumn(name="user_type_id")
     private UserType userType;
@@ -49,18 +53,28 @@ public class User implements UserDetails, CredentialsContainer {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        switch (this.getUserType().getId()){
+            case 3L:
+                return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+                        new SimpleGrantedAuthority("ROLE_MONITO"),
+                        new SimpleGrantedAuthority("ROLE_USER"));
+            default:
 
-        return List.of();
+
+        }
+
+
+
     }
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return this.hash_password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.username;
     }
 
     @Override
