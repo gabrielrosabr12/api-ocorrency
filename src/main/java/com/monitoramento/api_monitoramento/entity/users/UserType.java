@@ -1,4 +1,4 @@
-package com.monitoramento.api_monitoramento.entity;
+package com.monitoramento.api_monitoramento.entity.users;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class UserType {
 
     public enum Enum{
         USER(1L,"user"),
-        COLLABORATOR(2L,"colaborator"),
+        COLLABORATOR(2L,"collaborator"),
         ADMIN(3L,"administrator");
 
         private final Long id;

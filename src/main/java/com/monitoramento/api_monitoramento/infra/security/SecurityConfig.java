@@ -2,9 +2,12 @@ package com.monitoramento.api_monitoramento.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 //import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +30,10 @@ public class SecurityConfig { // (1)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
-                                .requestMatchers("/teste").hasAuthority("NECA")
+                                .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
+                                .requestMatchers("/teste").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                         )
                 .httpBasic(Customizer.withDefaults())
@@ -42,14 +47,6 @@ public class SecurityConfig { // (1)
     // Function that is the feature that
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    public InMemoryUserDetailsManager geradorSenhas(){
-        List users = new LinkedList<UserDetails>();
-        UserDetails user = User.builder().username("neca").password("irineu").roles("USER").build();
-        users.add(user);
-
-        return new InMemoryUserDetailsManager();
     }
 
 }

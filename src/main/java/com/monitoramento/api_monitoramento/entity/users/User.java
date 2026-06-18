@@ -1,4 +1,4 @@
-package com.monitoramento.api_monitoramento.entity;
+package com.monitoramento.api_monitoramento.entity.users;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,19 +31,22 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="password_hash", length = 255, nullable = false)
     private String hash_password;
 
+    @Column(name="registration", length = 6,nullable = false,unique = true)
+    private String registration;
+
     public User() {
     }
 
     @ManyToOne
-    @JoinColumn(name="user_type_id")
+    @JoinColumn(name="user_type")
     private UserType userType;
 
-    public User(Long id, String username, String email, String hash_password, UserType userType) {
-        Id = id;
+    public User(String username, String email, String hash_password, UserType userType,String registration) {
         this.username = username;
         this.email = email;
         this.hash_password = hash_password;
         this.userType = userType;
+        this.registration = registration;
     }
 
     //Analise and verify the UserType if the same is administrator
@@ -53,17 +56,16 @@ public class User implements UserDetails, CredentialsContainer {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        switch (this.getUserType().getId()){
-            case 3L:
-                return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-                        new SimpleGrantedAuthority("ROLE_MONITO"),
-                        new SimpleGrantedAuthority("ROLE_USER"));
-            default:
-
-
+        System.out.println(this.userType.getType());
+        if (this.userType.equals(UserType.Enum.ADMIN.get())) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_COLLABORATOR"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        } else if (this.userType.equals(UserType.Enum.COLLABORATOR)) {
+            return List.of(new SimpleGrantedAuthority("ROLE_COLLABORATOR"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
         }
-
-
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
 
     }
 

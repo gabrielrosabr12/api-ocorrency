@@ -1,6 +1,6 @@
 package com.monitoramento.api_monitoramento.config;
 
-import com.monitoramento.api_monitoramento.entity.UserType;
+import com.monitoramento.api_monitoramento.entity.users.UserType;
 import com.monitoramento.api_monitoramento.repository.UserTypeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
