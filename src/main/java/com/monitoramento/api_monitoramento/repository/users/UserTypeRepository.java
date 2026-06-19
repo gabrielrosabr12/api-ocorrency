@@ -1,4 +1,4 @@
-package com.monitoramento.api_monitoramento.repository;
+package com.monitoramento.api_monitoramento.repository.users;
 
 import com.monitoramento.api_monitoramento.entity.users.UserType;
 import org.springframework.data.jpa.repository.JpaRepository;

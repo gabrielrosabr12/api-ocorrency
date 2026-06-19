@@ -17,6 +17,7 @@ public class UserAlreadyExists extends OcorrencyExceptions {
 
         pb.setTitle("User "+this.username+" Already Exists in the Database");
         pb.setDetail("After fetch a user, He was identified already exists ");
+
         return pb;
     }
 

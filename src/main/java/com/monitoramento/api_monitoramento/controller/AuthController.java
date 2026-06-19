@@ -1,10 +1,7 @@
 package com.monitoramento.api_monitoramento.controller;
 
-import com.monitoramento.api_monitoramento.entity.users.User;
 import com.monitoramento.api_monitoramento.entity.users.UserDto;
 import com.monitoramento.api_monitoramento.services.UsersServices;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

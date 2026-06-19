@@ -4,7 +4,7 @@ import com.monitoramento.api_monitoramento.entity.users.User;
 import com.monitoramento.api_monitoramento.entity.users.UserDto;
 import com.monitoramento.api_monitoramento.entity.users.UserType;
 import com.monitoramento.api_monitoramento.exceptions.UserAlreadyExists;
-import com.monitoramento.api_monitoramento.repository.UserRepository;
+import com.monitoramento.api_monitoramento.repository.users.UserRepository;
 
 import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -56,7 +56,6 @@ public class User implements UserDetails, CredentialsContainer {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println(this.userType.getType());
         if (this.userType.equals(UserType.Enum.ADMIN.get())) {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_COLLABORATOR"),

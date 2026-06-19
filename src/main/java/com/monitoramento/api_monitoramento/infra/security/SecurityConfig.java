@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN;
+
 @Configuration
 @EnableWebSecurity // (1)
 public class SecurityConfig { // (1)
@@ -37,7 +39,10 @@ public class SecurityConfig { // (1)
                                 .anyRequest().authenticated()
                         )
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults())
+                //Enable injetion iframes in page html
+                .headers((headers) -> headers
+                        .frameOptions((frameOptions) -> frameOptions.sameOrigin()));
 
         return http.build();
     }
