@@ -2,6 +2,7 @@ package com.monitoramento.api_monitoramento.services;
 
 import com.monitoramento.api_monitoramento.interfaces.StorageService;
 import com.monitoramento.api_monitoramento.properties.StorageProperties;
+import com.monitoramento.api_monitoramento.repository.notes.AttachmentsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -20,9 +23,15 @@ public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
     private final Logger logger = LoggerFactory.getLogger(FileSystemStorageService.class);
+    private final AttachmentsRepository attachmentsRepository;
+    private final NoteServices noteServices;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties){
+    public FileSystemStorageService(StorageProperties properties,
+                                    AttachmentsRepository attachmentsRepository,
+                                    NoteServices noteServices){
+        this.noteServices = noteServices;
+        this.attachmentsRepository = attachmentsRepository;
         ///(1) if path length default is equal to zero, throw new exception
         if (properties.getLocation().trim().isEmpty()){
             throw new RuntimeException("File upload location can not be Empty");
@@ -45,15 +54,26 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file) {
-        try{
-            if(file.isEmpty()){
-                throw new RuntimeException("Failed to store empty file "+file.getOriginalFilename());
-            }
-            Files.copy(file.getInputStream(),this.rootLocation.resolve(file.getOriginalFilename()));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to store file "+file.getOriginalFilename(),e);
+    public Set<Path> store(Set<MultipartFile> files) {
+        if (files == null || files.isEmpty()){
+            throw new RuntimeException("Falha não possuia nenhum anexo");
         }
+
+        return files.stream().map(file -> {
+           if (file.isEmpty()){
+               throw new RuntimeException("Falha ao armazenar arquivo vazio: "+file.getOriginalFilename());
+           }
+
+           try{
+               Path destinationFile = this.rootLocation.resolve(file.getOriginalFilename());
+
+               Files.copy(file.getInputStream(),destinationFile);
+
+               return  destinationFile;
+           } catch (IOException e ){
+               throw new RuntimeException("Erro ao armazenar o arquivo: "+file.getOriginalFilename());
+           }
+        }).collect(Collectors.toSet());
     }
 
     @Override

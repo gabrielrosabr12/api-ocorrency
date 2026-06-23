@@ -17,12 +17,12 @@ public class NoteMapper {
         //Optional<Set<Attachments>> attachments = noteDto.attachments().map(this::toMapAttachments);
         return new Note(noteDto.title(),noteDto.body(), LocalDateTime.now(),null);
     }
-
-    public Set<Attachments> toMapAttachments(AttachmentsDto attachmentsDto) {
-        Set<Attachments> attachments = null;
-        if (!attachmentsDto.file_paths().isEmpty()) {
-            attachments = attachmentsDto.file_paths().stream().map(Attachments::new).collect(Collectors.toSet());
-        }
-        return attachments;
-    }
+//
+//    public Set<Attachments> toMapAttachments(AttachmentsDto attachmentsDto) {
+//        Set<Attachments> attachments = null;
+//        if (!attachmentsDto.file_paths().isEmpty()) {
+//            attachments = attachmentsDto.file_paths().stream().map(Attachments::new).collect(Collectors.toSet());
+//        }
+//        return attachments;
+//    }
 }
