@@ -5,6 +5,7 @@ CREATE TABLE `_user` (
                          password_hash varchar(255) not null,
                          user_type BIGINT,
                          registration varchar(6) not null unique,
+                         is_enabled boolean default true,
 
                          CONSTRAINT fk_user_role FOREIGN KEY (user_type) REFERENCES `_user_type` (id)
 );

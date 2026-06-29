@@ -33,14 +33,14 @@ public class ControllerNotes {
     public ResponseEntity<?> createNotes(@AuthenticationPrincipal User user,
                                          @RequestPart("noteDto") NoteDto noteDto,
                                          @RequestParam("files") HashSet<MultipartFile> files){
-        Set<Path> path = storageService.store(files);
+        Set<Path> path = storageService.store(files,noteDto.title());
         Note note = noteServices.createANote(user,noteDto,path);
         return ResponseEntity.ok(note);
     }
 
     @PostMapping("/post_attachment")
     public ResponseEntity<?> createAttachment(@RequestParam("file") Set<MultipartFile> arquivo){
-        storageService.store(arquivo);
+        storageService.store(arquivo,"testes");
         System.out.println("Test carried out successfully");
         return ResponseEntity.ok("Test carried out successfully");
     }

@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,7 +56,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Set<Path> store(Set<MultipartFile> files) {
+    public Set<Path> store(Set<MultipartFile> files,String pathTitle) {
         if (files == null || files.isEmpty()){
             throw new RuntimeException("Falha não possuia nenhum anexo");
         }
@@ -65,7 +67,11 @@ public class FileSystemStorageService implements StorageService {
            }
 
            try{
-               Path destinationFile = this.rootLocation.resolve(file.getOriginalFilename());
+               String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+               String identificator = UUID.randomUUID().toString().replace("-","") + extension;
+
+               Files.createDirectories(this.rootLocation.resolve(pathTitle));
+               Path destinationFile = this.rootLocation.resolve(pathTitle).resolve(identificator);
 
                Files.copy(file.getInputStream(),destinationFile);
 
