@@ -5,6 +5,7 @@ import com.monitoramento.api_monitoramento.entity.users.User;
 import com.monitoramento.api_monitoramento.exceptions.TokenException;
 import com.monitoramento.api_monitoramento.exceptions.UserNotAuthenticated;
 import com.monitoramento.api_monitoramento.exceptions.UserWrongCredentials;
+import com.monitoramento.api_monitoramento.repository.users.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,9 @@ import java.util.stream.Collectors;
 public class TokenService {
 
     @Autowired
+    private final UserRepository userRepository;
+
+    @Autowired
     private final AuthenticationManager authenticationManager;
     @Autowired
     private final JwtEncoder jwtEncoder;
@@ -32,8 +36,9 @@ public class TokenService {
     @Autowired
     private final JwtDecoder jwtDecoder;
 
-    public Map<String,String> refreshToken(User user, String refreshToken) {
+    public Map<String,String> refreshToken(String refreshToken) {
         try {
+
             // 1. Decodifica e valida o Refresh Token usando a chave pública
             Jwt decodedJwt = jwtDecoder.decode(refreshToken);
 
@@ -43,11 +48,10 @@ public class TokenService {
             }
 
             // 3. Pega o usuário que estava dentro do token
-            String username = decodedJwt.getSubject();
-            Instant now = Instant.now();
+            User user = userRepository.findByUsername(decodedJwt.getSubject());
 
             // 4. Gera um NOVO Access Token (mais 1 hora)
-            String newAccessToken = this.createJwtToken(3600,username,"ACESS",user.getAuthorities());
+            String newAccessToken = this.createJwtToken(3600,user.getUsername(),"ACESS",user.getAuthorities());
 
             Map<String, String> response = new HashMap<>();
             response.put("accessToken", newAccessToken);

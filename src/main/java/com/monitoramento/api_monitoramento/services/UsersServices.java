@@ -40,6 +40,7 @@ public class UsersServices implements UserDetailsService {
         if (!userExists(userDto.username(), userDto.email())){
             String password = this.encode(userDto.password());
             User user = new User(userDto.username(), userDto.email(),password, UserType.Enum.USER.get(),userDto.registration());
+            user.setEnabled(true);
             userRepository.save(user);
             return Boolean.TRUE;
         }

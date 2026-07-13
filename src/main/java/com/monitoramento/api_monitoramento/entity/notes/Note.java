@@ -38,6 +38,11 @@ public class Note {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @ManyToOne()
+    @JoinColumn(name="status_note", nullable = false)
+    private StatusNote statusNote;
+
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="attachment_note",
     joinColumns = @JoinColumn(name="note_id"),

@@ -1,14 +1,10 @@
 package com.monitoramento.api_monitoramento.mappers;
 
-import com.monitoramento.api_monitoramento.entity.notes.Attachments;
-import com.monitoramento.api_monitoramento.entity.notes.AttachmentsDto;
 import com.monitoramento.api_monitoramento.entity.notes.Note;
-import com.monitoramento.api_monitoramento.entity.notes.NoteDto;
+import com.monitoramento.api_monitoramento.entity.notes.dtos.NoteDto;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class NoteMapper {

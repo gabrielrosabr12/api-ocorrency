@@ -54,16 +54,16 @@ public class SecurityConfig { // (1)
         http
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(this.corsConfiguration()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        )
                 .authorizeHttpRequests((authorize) -> authorize
                                 .requestMatchers(HttpMethod.POST,"/auth/**").permitAll()
-                                //.requestMatchers(HttpMethod.POST,"/login").permitAll()
-                                .requestMatchers("/api/auth/**").permitAll() // Rota de login pública
+                                .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/teste").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                         )
 
-                //.oauth2ResourceServer((auth) -> auth.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer((auth) -> auth.jwt(Customizer.withDefaults()))
                 //.httpBasic(Customizer.withDefaults())
 //                .formLogin(Customizer.withDefaults())
                 //Enable injetion iframes in page html
@@ -97,7 +97,7 @@ public class SecurityConfig { // (1)
     @Bean
     public CorsConfigurationSource corsConfiguration(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200","http://172.20.153.114:4200"));
         configuration.setAllowedMethods(List.of("GET","POST","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
 

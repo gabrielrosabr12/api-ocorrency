@@ -1,24 +1,21 @@
 package com.monitoramento.api_monitoramento.controller.notes;
 
 import com.monitoramento.api_monitoramento.entity.notes.Note;
-import com.monitoramento.api_monitoramento.entity.notes.NoteDto;
-import com.monitoramento.api_monitoramento.entity.users.User;
+import com.monitoramento.api_monitoramento.entity.notes.dtos.EditingNotesDto;
+import com.monitoramento.api_monitoramento.entity.notes.dtos.NoteDto;
 import com.monitoramento.api_monitoramento.interfaces.StorageService;
 import com.monitoramento.api_monitoramento.services.NoteServices;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController()
 @RequestMapping("/notes")
@@ -30,12 +27,20 @@ public class ControllerNotes {
     private final StorageService storageService;
 
     @PostMapping(value="/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createNotes(@AuthenticationPrincipal User user,
+    public ResponseEntity<?> createNotes(@AuthenticationPrincipal Jwt jwt,
                                          @RequestPart("noteDto") NoteDto noteDto,
                                          @RequestParam("files") HashSet<MultipartFile> files){
         Set<Path> path = storageService.store(files,noteDto.title());
-        Note note = noteServices.createANote(user,noteDto,path);
+        Note note = noteServices.createANote(jwt.getSubject(),noteDto,path);
         return ResponseEntity.ok(note);
+    }
+
+    @PostMapping(value="/comment")
+    public ResponseEntity<?> commentInNotes(@AuthenticationPrincipal Jwt jwt,
+                                            @RequestBody EditingNotesDto editingNotesDto){
+
+
+        return ResponseEntity.ok();
     }
 
     @PostMapping("/post_attachment")
