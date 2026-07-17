@@ -34,6 +34,9 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="registration", length = 6,nullable = false,unique = true)
     private String registration;
 
+    @Column(name="is_enabled")
+    private boolean isEnabled;
+
     public User() {
     }
 
@@ -95,7 +98,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return this.isEnabled;
     }
 
     @Override
